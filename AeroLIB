@@ -502,25 +502,60 @@ function Library.new(opts)
     local minH = Config.Size.Y.Offset
     local resizing = false
 
+    -- Bottom-right resize grip (diagonal icon instead of a solid square)
     local resizeHandle = Instance.new("Frame")
     resizeHandle.Name = "ResizeHandle"
-    resizeHandle.BackgroundColor3 = Config.Theme.Accent
-    resizeHandle.BackgroundTransparency = 0.15
+    resizeHandle.BackgroundTransparency = 1
     resizeHandle.BorderSizePixel = 0
-    resizeHandle.Size = UDim2.new(0, 16, 0, 16)
-    resizeHandle.Position = UDim2.new(1, -18, 1, -18)
-    resizeHandle.ZIndex = 5
+    resizeHandle.Size = UDim2.new(0, 24, 0, 24)
+    resizeHandle.Position = UDim2.new(1, -24, 1, -24)
+    resizeHandle.ZIndex = 20
     resizeHandle.Parent = self.Window
-    Corner(resizeHandle, 4)
-    Stroke(resizeHandle, Config.Theme.Edge, 1)
+
+    -- Three diagonal grip lines
+    for i = 1, 3 do
+        local gripLine = Instance.new("Frame")
+        gripLine.Name = "GripLine" .. i
+        gripLine.AnchorPoint = Vector2.new(0.5, 0.5)
+        gripLine.BackgroundColor3 = Config.Theme.Accent
+        gripLine.BackgroundTransparency = 0.05
+        gripLine.BorderSizePixel = 0
+        gripLine.Size = UDim2.new(0, 2, 0, 6 + i * 3)
+        gripLine.Position = UDim2.new(1, - (4 + (i - 1) * 5), 1, - (4 + (i - 1) * 5))
+        gripLine.Rotation = 45
+        gripLine.ZIndex = 21
+        gripLine.Parent = resizeHandle
+        Corner(gripLine, 1)
+    end
 
     local resizeBtn = Instance.new("TextButton")
+    resizeBtn.Name = "ResizeButton"
     resizeBtn.BackgroundTransparency = 1
+    resizeBtn.BorderSizePixel = 0
     resizeBtn.Size = UDim2.new(1, 0, 1, 0)
+    resizeBtn.Position = UDim2.new(0, 0, 0, 0)
     resizeBtn.Text = ""
+    resizeBtn.AutoButtonColor = false
+    resizeBtn.Active = true
+    resizeBtn.ZIndex = 22
     resizeBtn.Parent = resizeHandle
 
     local resizeStartMouse, resizeStartSize
+
+    resizeBtn.MouseEnter:Connect(function()
+        for _, child in ipairs(resizeHandle:GetChildren()) do
+            if child:IsA("Frame") and child.Name:match("^GripLine") then
+                Tween(child, TI_FAST, { BackgroundColor3 = Config.Theme.AccentHover })
+            end
+        end
+    end)
+    resizeBtn.MouseLeave:Connect(function()
+        for _, child in ipairs(resizeHandle:GetChildren()) do
+            if child:IsA("Frame") and child.Name:match("^GripLine") then
+                Tween(child, TI_FAST, { BackgroundColor3 = Config.Theme.Accent })
+            end
+        end
+    end)
 
     resizeBtn.MouseButton1Down:Connect(function()
         resizing = true
@@ -545,7 +580,7 @@ function Library.new(opts)
             local newH = math.max(minH, resizeStartSize.Y.Offset + deltaY)
 
             self.Window.Size = UDim2.new(0, newW, 0, newH)
-            glowRing.Size    = UDim2.new(0, newW, 0, newH)
+            glowRing.Size = UDim2.new(0, newW, 0, newH)
         end
     end)
 
