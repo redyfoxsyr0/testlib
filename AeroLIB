@@ -377,6 +377,53 @@ function Library.new(opts)
     self.ScreenGui.Parent         = PARENT
     TrackTheme(self.ScreenGui)
 
+    -- Bottom-left credits popup (dismissed with Continue).
+    local credits = Instance.new("Frame")
+    credits.Name = "CreditsPopup"
+    credits.AnchorPoint = Vector2.new(0, 1)
+    credits.Position = UDim2.new(0, 12, 1, -12)
+    credits.Size = UDim2.new(0, 260, 0, 146)
+    credits.BackgroundColor3 = Color3.fromRGB(54, 39, 49)
+    credits.BorderSizePixel = 0
+    credits.ZIndex = 50
+    credits.Parent = self.ScreenGui
+    Corner(credits, 8)
+    Stroke(credits, Color3.fromRGB(130, 78, 105), 1)
+
+    local creditsText = Instance.new("TextLabel")
+    creditsText.Name = "CreditsText"
+    creditsText.BackgroundTransparency = 1
+    creditsText.Position = UDim2.new(0, 10, 0, 7)
+    creditsText.Size = UDim2.new(1, -20, 0, 96)
+    creditsText.Font = Enum.Font.Gotham
+    creditsText.Text = "Made by rFlixzypoo\nAssets from q_ow2\nFree and Open Source\nVersion: 1.1.0\nFlixz is a simp for his girlfriend <3"
+    creditsText.TextColor3 = Color3.fromRGB(245, 239, 243)
+    creditsText.TextSize = 12
+    creditsText.TextXAlignment = Enum.TextXAlignment.Left
+    creditsText.TextYAlignment = Enum.TextYAlignment.Top
+    creditsText.TextWrapped = true
+    creditsText.ZIndex = 51
+    creditsText.Parent = credits
+
+    local continueButton = Instance.new("TextButton")
+    continueButton.Name = "ContinueButton"
+    continueButton.AnchorPoint = Vector2.new(1, 1)
+    continueButton.Position = UDim2.new(1, -9, 1, -8)
+    continueButton.Size = UDim2.new(0, 82, 0, 27)
+    continueButton.BackgroundColor3 = Color3.fromRGB(130, 78, 105)
+    continueButton.BorderSizePixel = 0
+    continueButton.Font = Enum.Font.GothamMedium
+    continueButton.Text = "Continue"
+    continueButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    continueButton.TextSize = 12
+    continueButton.AutoButtonColor = true
+    continueButton.ZIndex = 51
+    continueButton.Parent = credits
+    Corner(continueButton, 5)
+    continueButton.Activated:Connect(function()
+        credits:Destroy()
+    end)
+
     local glowRing = Instance.new("Frame")
     glowRing.BackgroundTransparency = 1
     glowRing.BorderSizePixel        = 0
