@@ -1818,7 +1818,7 @@ function Library:NewSection(name)
         Corner(black, 5)
         local bg = Instance.new("UIGradient")
         bg.Rotation     = 90
-        bg.Transparency = NumberSequence.new(1, 0)k
+        bg.Transparency = NumberSequence.new(1, 0)
         bg.Parent = black
 
         local svCur = Instance.new("Frame")
